@@ -19,6 +19,6 @@ public final class RemoteFeedLoader: FeedLoader {
 	}
 	
 	public func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        print("hello im starting challenge 1")
+        print("hello im starting challenge 1 and checking is git working")
     }
 }
