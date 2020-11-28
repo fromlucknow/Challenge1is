@@ -19,7 +19,10 @@ public final class RemoteFeedLoader: FeedLoader {
 	}
     public typealias Result = LoadFeedResult
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
-        client.get(from: url) { (result) in
+        client.get(from: url) {[weak self] (result) in
+            if self == nil{
+                return
+            }
             switch result{
             case let .success(data, resp):
                 completion(FeedItemsMapper.map(data, from: resp))
@@ -28,14 +31,5 @@ public final class RemoteFeedLoader: FeedLoader {
                 completion(.failure(RemoteFeedLoader.Error.connectivity))
             }
         }
-//        client.get(from: url) { result in
-//            switch result{
-//            case .success(Dataresponse, response):
-//                completion(.failure(RemoteFeedLoader.Error.invalidData))
-//            case .failure(error):
-//                completion(.failure(RemoteFeedLoader.Error.connectivity))
-//            }
-//
-//        }
     }
 }
