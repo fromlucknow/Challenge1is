@@ -17,17 +17,25 @@ public final class RemoteFeedLoader: FeedLoader {
 		self.url = url
 		self.client = client
 	}
-	
-	public func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        client.get(from: url) { result in
+    public typealias Result = LoadFeedResult
+    public func load(completion: @escaping (LoadFeedResult) -> Void) {
+        client.get(from: url) { (result) in
             switch result{
-            
-            case .success((_, _)):
-                completion(.failure(RemoteFeedLoader.Error.invalidData))
-            case .failure(_):
+            case let .success(data, resp):
+                completion(FeedItemsMapper.map(data, from: resp))
+                
+            case .failure:
                 completion(.failure(RemoteFeedLoader.Error.connectivity))
             }
-            
         }
+//        client.get(from: url) { result in
+//            switch result{
+//            case .success(Dataresponse, response):
+//                completion(.failure(RemoteFeedLoader.Error.invalidData))
+//            case .failure(error):
+//                completion(.failure(RemoteFeedLoader.Error.connectivity))
+//            }
+//
+//        }
     }
 }
